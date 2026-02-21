@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alcaldía Municipal - Sistema de Trámites</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo"><i class="fas fa-university"></i> <span>Alcaldía Municipal</span></div>
+        <button class="btn-top" onclick="window.location.reload()">Inicio / Salir</button>
+    </header>
+
+    <main class="container" id="mainView">
+        <div class="welcome-text">
+            <h1>Bienvenido al Portal de Trámites</h1>
+            <p>Gestiona tus trámites municipales de forma rápida y segura</p>
+        </div>
+        <div class="avatar-section">
+            <div class="circle-bg"><img src="https://cdn-icons-png.flaticon.com/512/147/147144.png" class="avatar-img"></div>
+            <h2 class="mono-title">Sistema de trámites virtuales</h2>
+        </div>
+        <div class="menu-actions">
+            <button class="btn-action" id="btnConsultar">Consultar trámite</button>
+            <button class="btn-action" id="btnIniciar">Iniciar trámite</button>
+            <button class="btn-action btn-login" id="btnOpenLogin">Iniciar sesión</button>
+        </div>
+    </main>
+
+    <section id="adminPanel" class="container" style="display: none;">
+        <div class="admin-header-box">
+            <h2 class="mono-title">Gestión de Trámites</h2>
+            <input type="text" id="buscadorAdmin" placeholder="🔍 Buscar nombre..." onkeyup="filtrarPorNombre()">
+            <div class="admin-btns">
+                <button onclick="descargarExcel()" class="btn-excel">📊 Exportar</button>
+                <button onclick="borrarTodoReal()" class="btn-delete-all">🗑️ BORRAR TODO</button>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Solicitante</th>
+                        <th>Trámite</th>
+                        <th>Estado</th>
+                        <th>Acciones</th> 
+                    </tr>
+                </thead>
+                <tbody id="listaTramitesAdmin"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <div id="modalMandarDoc" class="modal-overlay">
+        <div class="modal-window" style="max-width: 400px;">
+            <div class="modal-header">
+                <span>Enviar Respuesta a Usuario</span>
+                <span class="close-x" onclick="cerrar('modalMandarDoc')">X</span>
+            </div>
+            <div class="modal-body">
+                <p id="infoDestino" style="font-size: 0.8rem; color: #1d3557; font-weight: bold;"></p>
+                <label class="label-box">Seleccionar Documento (PDF/JPG/PNG)</label>
+                <input type="file" id="fileRespuesta" class="blue-input" accept=".pdf,.jpg,.png">
+                <button class="btn-submit" onclick="confirmarEnvio()">Confirmar Envío</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalConsulta" class="modal-overlay">
+        <div class="modal-window">
+            <div class="modal-header"><span>Estado del documento</span><span class="close-x" onclick="cerrar('modalConsulta')">X</span></div>
+            <div class="modal-body">
+                <label class="label-box">ID de Trámite</label>
+                <input type="text" id="idBusqueda" class="blue-input" placeholder="ALC-XXXX">
+                <label class="label-box">Apellido del Solicitante</label>
+                <input type="text" id="apellidoBusqueda" class="blue-input" placeholder="Ingrese su apellido">
+                <button class="btn-submit" onclick="buscarTramite()">Consultar</button>
+                <div id="resultadoBusqueda"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalTramite" class="modal-overlay">
+        <div class="modal-window">
+            <div class="modal-header"><span>Registro de Trámite</span><span class="close-x" onclick="cerrar('modalTramite')">X</span></div>
+            <div class="modal-body">
+                <label class="label-box">ID Automático</label>
+                <input type="text" id="idAutomatico" class="blue-input" readonly>
+                
+                <div class="row">
+                    <div><label class="label-box">Nombre</label><input type="text" id="nomSol" class="blue-input"></div>
+                    <div><label class="label-box">Apellido</label><input type="text" id="apeSol" class="blue-input"></div>
+                </div>
+
+                <label class="label-box">Seleccione el tipo de trámite</label>
+                <select id="tipoTramite" class="blue-input" onchange="actualizarRequisitos()">
+                    <option value="Certificado de Uso de Suelo">Certificado de Uso de Suelo</option>
+                    <option value="Exención de Impuestos">Solicitud de Exención de Impuestos</option>
+                    <option value="Movimiento de Tierras">Autorización para Movimiento de Tierras</option>
+                </select>
+
+                <div id="seccionArchivos">
+                    <p style="font-size: 0.7rem; font-weight: bold; margin-top: 10px; color: #1d3557;">ADJUNTAR REQUISITOS (Máx 3MB):</p>
+                    <label class="label-box" id="labelReq1">Requisito 1</label>
+                    <input type="file" id="file1" class="blue-input" accept=".pdf,.jpg,.jpeg,.png">
+                    <label class="label-box" id="labelReq2">Requisito 2</label>
+                    <input type="file" id="file2" class="blue-input" accept=".pdf,.jpg,.jpeg,.png">
+                    <label class="label-box" id="labelReq3">Requisito 3</label>
+                    <input type="file" id="file3" class="blue-input" accept=".pdf,.jpg,.jpeg,.png">
+                </div>
+                <button class="btn-submit" onclick="registrarTramite()">ENVIAR SOLICITUD</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalLogin" class="modal-overlay">
+        <div class="modal-window" style="max-width: 350px;">
+            <div class="modal-header"><span>Login Admin</span><span class="close-x" onclick="cerrar('modalLogin')">X</span></div>
+            <div class="modal-body">
+                <label class="label-box">Correo</label><input type="email" id="loginEmail" class="blue-input">
+                <label class="label-box">Contraseña</label><input type="password" id="loginPass" class="blue-input">
+                <button class="btn-submit" onclick="validarAcceso()">Entrar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalVerFotos" class="modal-overlay">
+        <div class="modal-window" style="max-width: 600px;">
+            <div class="modal-header">
+                <span>Documentos Adjuntos</span>
+                <span class="close-x" onclick="cerrar('modalVerFotos')">X</span>
+            </div>
+            <div id="contenedorFotos" class="modal-body" style="max-height: 500px; overflow-y: auto; background: white;"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

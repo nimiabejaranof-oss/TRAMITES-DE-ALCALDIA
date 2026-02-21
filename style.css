@@ -1,0 +1,33 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background-color: #2563eb; color: white; font-family: Arial, sans-serif; text-align: center; }
+.navbar { display: flex; justify-content: space-between; padding: 15px 40px; background: rgba(0,0,0,0.1); }
+.btn-top { background: white; border: none; padding: 8px 15px; border-radius: 5px; color: #2563eb; font-weight: bold; cursor: pointer; }
+.container { padding: 40px 20px; }
+.circle-bg { width: 150px; height: 150px; background: #7ba2cc; border-radius: 50%; margin: 25px auto; display: flex; justify-content: center; align-items: center; border: 4px solid white; }
+.avatar-img { width: 80%; }
+.mono-title { font-family: 'Courier New', monospace; }
+.menu-actions { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 20px; }
+.btn-action { width: 280px; padding: 12px; border: none; background: #b8d4d6; color: #1d3557; font-weight: bold; cursor: pointer; font-family: 'Courier New', monospace; box-shadow: 4px 4px 0px rgba(0,0,0,0.2); }
+
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; }
+.modal-window { background: #a8dadc; width: 95%; max-width: 500px; margin: 5% auto; border: 2px solid #457b9d; text-align: left; }
+.modal-header { background: #457b9d; padding: 10px; display: flex; justify-content: space-between; color: white; }
+.modal-body { padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+.label-box { background: #457b9d; color: white; padding: 3px 8px; width: fit-content; font-size: 0.7rem; margin-bottom: 2px; }
+.blue-input { width: 100%; padding: 8px; background: #3a86ff; border: 1px solid #1d3557; color: white; font-weight: bold; margin-bottom: 5px; }
+.btn-submit { background: #1d3557; color: white; padding: 12px; border: none; cursor: pointer; font-weight: bold; margin-top: 10px; }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+.table-container { background: white; border-radius: 8px; padding: 15px; overflow-x: auto; margin-top: 20px; }
+.admin-table { width: 100%; border-collapse: collapse; color: #1d3557; font-size: 0.8rem; }
+.admin-table th { background: #457b9d; color: white; padding: 10px; text-align: left; }
+.admin-table td { padding: 10px; border-bottom: 1px solid #eee; }
+
+.status-espera { color: #f39c12; font-weight: bold; }
+.status-aceptado { color: #27ae60; font-weight: bold; }
+.status-rechazado { color: #e74c3c; font-weight: bold; }
+
+.btn-acc { border: none; padding: 5px 8px; cursor: pointer; color: white; border-radius: 3px; font-size: 0.7rem; margin-right: 3px; }
+.btn-check { background: #27ae60; }
+.btn-x { background: #e74c3c; }
+.btn-doc { background: #457b9d; }
